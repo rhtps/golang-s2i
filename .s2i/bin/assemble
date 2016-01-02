@@ -17,13 +17,18 @@ fi
 #
 if [ "$(ls /tmp/artifacts/ 2>/dev/null)" ]; then
   echo "---> Restoring build artifacts..."
-  mv /tmp/artifacts/. /opt/artifacts/
+  cp -Rf /opt/go/destination/artifacts/* $GOPATH/
+  rm -rf /opt/go/destination/artifacts
+  cd $GOPATH/src
+  go get -u -v
 fi
 
-echo "---> Installing application source..."
-cp -Rf /tmp/src/. /opt/source/
 
 echo "---> Building application from source..."
-cd /opt/source
-go get -d
-go build -o goexec
+#The go get command will download all dependencies and create the binary for us.
+#Unfortunately it takes the name of the directory from which the source was compiled.
+#No matter, a simple mv command allows us to rename it.
+cd $GOPATH/destination/src
+go get -v .
+cd $GOBIN
+mv src goexec
