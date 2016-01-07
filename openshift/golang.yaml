@@ -21,7 +21,7 @@ objects:
   metadata:
     annotations:
       description: Keeps track of changes in the application image
-    name: golang-app
+    name: ${APPLICATION_NAME}
 
 - apiVersion: v1
   kind: BuildConfig
@@ -54,12 +54,12 @@ objects:
   metadata:
     annotations:
       description: Defines how to build the application
-    name: golang-app
+    name: ${APPLICATION_NAME}
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: golang-app:latest
+        name: ${APPLICATION_NAME}:latest
     source:
       contextDir: ${APP_CONTEXT_DIR}
       git:
@@ -84,35 +84,35 @@ objects:
   metadata:
     annotations:
       description: Defines how to deploy the application server
-    name: golang-app
+    name: ${APPLICATION_NAME}
   spec:
     replicas: 1
     selector:
-      name: golang-app
+      name: ${APPLICATION_NAME}
     strategy:
       type: Rolling
     template:
       metadata:
         labels:
-          name: golang-app
-        name: golang-app
+          name: ${APPLICATION_NAME}
+        name: ${APPLICATION_NAME}
       spec:
         containers:
         - env:
           - name: ARGS
             value: ${APP_ARGS}
-          image: golang-app
-          name: golang-app
+          image: ${APPLICATION_NAME}
+          name: ${APPLICATION_NAME}
           ports:
           - containerPort: 8080
     triggers:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - golang-app
+        - ${APPLICATION_NAME}
         from:
           kind: ImageStreamTag
-          name: golang-app:latest
+          name: ${APPLICATION_NAME}:latest
       type: ImageChange
     - type: ConfigChange
 
@@ -121,23 +121,30 @@ objects:
   metadata:
     annotations:
       description: Exposes and load balances the application pods
-    name: golang-app
+    name: ${APPLICATION_NAME}
   spec:
     ports:
     - name: web
       port: 8080
       targetPort: 8080
     selector:
-      name: golang-app
+      name: ${APPLICATION_NAME}
 
 - apiVersion: v1
+  id: ${APPLICATION_NAME}
   kind: Route
   metadata:
-    name: golang-app
+    annotations:
+      description: Route for application's http service.
+    labels:
+      application: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
   spec:
+    host: ${APPLICATION_DOMAIN}
     to:
-      kind: Service
-      name: golang-app
+      name: ${APPLICATION_NAME}
+
+
 
 parameters:
 - description: The URL of the repository with your Golang S2I builder Dockerfile
@@ -165,5 +172,12 @@ parameters:
   from: '[a-zA-Z0-9]{40}'
   generate: expression
   name: APP_GITHUB_WEBHOOK_SECRET
+- description: The name for the application.
+  name: APPLICATION_NAME
+  required: true
+  value: golang-app
+- description: 'Custom hostname for service routes.  Leave blank for default hostname,
+    e.g.: <application-name>.<project>.<default-domain-suffix>'
+  name: APPLICATION_DOMAIN
 - description: Command line arguments to provide to the Golang application
   name: APP_ARGS
