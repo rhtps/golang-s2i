@@ -15,7 +15,12 @@ LABEL io.k8s.description="Platform for building go based programs" \
       io.openshift.s2i.scripts-url="image://usr/local/s2i" \
       io.openshift.s2i.destination="/opt/go/destination"
 
-RUN yum install -y golang tar git-bzr && yum clean all; rm -rf /var/cache/yum
+RUN yum clean all && \
+    yum install -y golang \
+                   tar \
+                   git-bzr && \
+    yum clean all && \
+    rm -rf /var/cache/yum
 
 COPY ./.s2i/bin/ /usr/local/s2i
 RUN useradd 1001

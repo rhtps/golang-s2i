@@ -9,7 +9,7 @@ Once you obtain and install the S2I tools, you can either obtain the builder ima
 ## Obtaining the Builder image
 The image in Dockerhub is a CentOS based image.
 ```bash
-$ docker pull rhtps/golang-s2i
+$ docker pull kevensen/golang-s2i
 ```
 Once you've accomplished this, go ahead to the section on building your application.
 
