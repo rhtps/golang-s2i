@@ -1,6 +1,6 @@
-#!/bin/bash -e #
+#!/bin/bash 
 # S2I assemble script for the 'golang-s2i' image.
-cd $GOPATH/destination/src
-go get -v .
+cd $HOME/destination/src
+go get -insecure .
 cd $GOBIN
 mv src goexec
