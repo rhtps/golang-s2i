@@ -1,6 +1,17 @@
 #!/bin/bash 
 # S2I assemble script for the 'golang-s2i' image.
-cd $HOME/destination/src
-go get -insecure .
+echo "Source...."
+echo $GOLANG_SOURCE_REPOSITORY
+
+dest=$(echo $GOLANG_SOURCE_REPOSITORY | sed 's/https:\/\///g' | sed 's/http:\/\///g' | sed 's/.git$//g')
+exec=${dest##*/}
+
+mkdir -p ${dest}
+cp -ar /tmp/src/* /opt/app-root/src/${dest} 
+
+cd /opt/app-root/src/${dest}
+go get .
+go install .
+
 cd $GOBIN
-mv src goexec
+mv $exec goapp

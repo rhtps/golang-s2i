@@ -1,5 +1,5 @@
 
-IMAGE_NAME = gochat-s2i
+IMAGE_NAME = s2i-golang
 
 build:
 	docker build -t $(IMAGE_NAME) .

@@ -163,7 +163,6 @@ parameters:
   name: BUILDER_GITHUB_WEBHOOK_SECRET
 - description: The URL of the repository with your Golang application code
   displayName: Application Source Repository URL
-  value: https://github.com/rhtps/gochat.git
   name: APP_SOURCE_REPOSITORY_URL
 - description: Set this to a branch name, tag or other ref of your repository if you are not using the default branch
   displayName: Application Source Repository Reference (Branch)

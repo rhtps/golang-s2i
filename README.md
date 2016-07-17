@@ -1,4 +1,4 @@
-# golang-s2i
+# s2i-golang
 
 This builder image enables a developer to inject source code from a golang based project, compiled, and staged for execution.  This builder image can be used in OpenShift 3.x for the Source-to-Image (S2I) build process.
 
@@ -9,19 +9,19 @@ Once you obtain and install the S2I tools, you can either obtain the builder ima
 ## Obtaining the Builder image
 The image in Dockerhub is a CentOS based image.
 ```bash
-$ docker pull kevensen/golang-s2i
+$ docker pull kevensen/s2i-golang
 ```
 Once you've accomplished this, go ahead to the section on building your application.
 
 ## Constructing the Builder Image from Scratch
 Obtain the GitHub project and enter the project directory.
 ```bash
-$ git clone https://github.com/rhtps/golang-s2i.git
-$ cd golang-s2i
+$ git clone https://github.com/rhtps/s2i-golang.git
+$ cd s2i-golang
 ```
-Build the centos-golang-s2i Docker image
+Build the s2i-golang Docker image
 ```bash
-$ docker build -t golang-s2i .
+$ docker build -t s2i-golang .
 ```
 Or
 ```bash
