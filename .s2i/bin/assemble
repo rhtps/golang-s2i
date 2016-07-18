@@ -1,17 +1,34 @@
 #!/bin/bash 
 # S2I assemble script for the 'golang-s2i' image.
-echo "Source...."
-echo $GOLANG_SOURCE_REPOSITORY
 
 dest=$(echo $GOLANG_SOURCE_REPOSITORY | sed 's/https:\/\///g' | sed 's/http:\/\///g' | sed 's/.git$//g')
 exec=${dest##*/}
 
+# If we are building from a local source repo, it's unlikely the GOLANG_SOURCE_REPOSITORY variable
+# is set.
+echo "GOLANG_SOURCE_REPOSITORY not set.  Using generic values..."
+if [[ -z $GOLANG_SOURCE_REPOSITORY ]]; then
+	dest=goapp
+	exec=goapp
+fi
+
+
+echo "Creating destination directory /opt/app-root/src/${dest}..."
 mkdir -p ${dest}
+
+echo "Copying sources..."
 cp -ar /tmp/src/* /opt/app-root/src/${dest} 
 
+echo "Obtaining dependencies..."
 cd /opt/app-root/src/${dest}
 go get .
+
+echo "Installing binary..."
 go install .
 
 cd $GOBIN
-mv $exec goapp
+
+if [[ $exec != "goapp" ]]; then
+	echo "Renaming binary..."
+	mv $exec goapp
+fi
